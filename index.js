@@ -17,9 +17,6 @@ btnParse.addEventListener("click", function () {
 
 class SMSParser {
 
-
-    
-
     constructor (network, lang){
         this.network = network;
         this.lang = lang;
@@ -49,12 +46,15 @@ class SMSParser {
         found = sms.match(regEx);
         const disponible = found[0].replace('disponible est de ','');
         
+        //parsed data object
         const data = {
             transID: transID, 
             amount: amount, 
             currency: currency,
             disponible: disponible
         } ;
+
+
         console.log(JSON.stringify(data));
 
         return(data);
@@ -62,7 +62,8 @@ class SMSParser {
 
     getParsedDataHTML(sms){
         const data = this.parseSMS(sms);
-        const html = '<div>Trans ID: <b>' + data[this.TRANS_ID] + '</b></div>' + 
+        const html = 
+        '<div>Trans ID: <b>' + data[this.TRANS_ID] + '</b></div>' + 
         '<div>Amount: <b>' + data[this.AMOUNT] + '</b></div>' +
         '<div>Currency: <b>' + data[this.CURRENCY] + "</b></div>" +
         '<div>Disponible: <b>' + data[this.DISPONIBLE] + "</b></div>";
@@ -70,9 +71,14 @@ class SMSParser {
         return html;
     }
 
+    smsSamples () {
+        return(
+            {
+                userMoneySend : 'userMoneySend'
+            }
+        )
+    }
 
 }
 
-const smsSamples = {
 
-}
