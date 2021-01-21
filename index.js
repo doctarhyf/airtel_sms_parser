@@ -1,17 +1,34 @@
 
 var btnParse = document.getElementById('btn-parse');
-var smsDetailsCont = document.getElementById('sms-details-cont');
+var smsCont = document.getElementById('sms-details-cont');
+var smsParsedDataCont = document.getElementById('sms-parsed-data');
 var sms = document.getElementById('sms');
 
 btnParse.addEventListener("click", function () {
 
+    var parser = new SMSParser('voda', 'fr');
+    var smsVal = sms.value;
+    var smsParsed = parseSMS(smsVal)
 
-    var smsCont = sms.value;
-    var smsParsed = parseSMS(smsCont)
-
-    smsDetailsCont.innerHTML = "parsing data with : <br/><br/><b>" + smsParsed + '</b>';
+    smsCont.innerHTML = "sms : <br/><br/><b>" + smsVal + '</b>';
+    smsParsedDataCont.innerHTML = "Parsed Data : <br/><br/><b>" + parser.parse(smsParsed) + '</b>'
 })
 
 function parseSMS(sms){
-    return "parsed sms -> " + sms;
+    return sms;
+}
+
+class SMSParser {
+    constructor (network, lang){
+        this.network = network;
+        this.lang = lang;
+    }
+
+    parse(sms){
+        return 'pasing this -> ' + sms;
+    }
+}
+
+const smsSamples = {
+
 }
