@@ -69,6 +69,10 @@ class SMSParser {
         const isAdminMoneyReceived = (JSON.stringify(this.parseSMSAdminMoneyReceived(sms)) === 'null') === false;
         const isAdminMoneyCheck = (JSON.stringify(this.parseSMSAdminMoneyCheck(sms)) === 'null') === false;
 
+        const isUserMoneySent = (JSON.stringify(this.parseSMSUserMoneySent(sms)) === 'null') === false;
+        const isUserMoneyReceived = (JSON.stringify(this.parseSMSUserMoneyReceived(sms)) === 'null') === false;
+        const isUserMoneyCheck = (JSON.stringify(this.parseSMSAdminMoneyCheck(sms)) === 'null') === false;
+
 
         
 
@@ -82,6 +86,18 @@ class SMSParser {
 
        if(isAdminMoneyCheck === true){
         return SMSParser.SMS_TYPE.ADMIN_MONEY_CHECK;
+        }
+
+        if(isUserMoneySent === true){
+            return SMSParser.SMS_TYPE.USER_MONEY_SENT;
+        }
+
+        if(isUserMoneyReceived === true){
+            return SMSParser.SMS_TYPE.USER_MONEY_RECEIVED;
+        }
+
+        if(isUserMoneyCheck === true){
+            return SMSParser.SMS_TYPE.USER_MONEY_CHECK;
         }
 
        return SMSParser.SMS_TYPE.NO_TYPE;
@@ -133,11 +149,23 @@ class SMSParser {
     }
 
     parseSMSAdminMoneyReceived(sms){
-        return 'null'
+        return null;
     }
 
     parseSMSAdminMoneyCheck(sms){
-        return 'null';
+        return null;
+    }
+
+    parseSMSUserMoneySent(sms){
+        return null;
+    }
+
+    parseSMSUserMoneyReceived(sms){
+        return null;
+    }
+
+    parseSMSUserMoneyCheck(sms){
+        return null;
     }
 
     getParsedDataHTML(sms){
