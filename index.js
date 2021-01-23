@@ -8,7 +8,7 @@ btnParse.addEventListener("click", function () {
 
     var parser = new SMSParser('voda', 'fr');
     var smsVal = sms.value;
-    var smsParsed = parser.getParsedDataHTML(smsVal);
+    var smsParsed = parser.getSMSType(smsVal);
 
     smsCont.innerHTML = "sms : <br/><br/><b>" + smsVal + '</b>';
     smsParsedDataCont.innerHTML = "Parsed Data : <br/><br/><b>" + smsParsed + '</b>'
@@ -32,11 +32,31 @@ class SMSParser {
     static SMS_TYPE = {
         ADMIN_MONEY_SENT : 'ADMIN_MONEY_SENT',
         ADMIN_MONEY_RECEIVED : 'ADMIN_MONEY_RECEIVED',
-        ADMIN_MONEY_CHECK : 'ADMIN_MONEY_CHECK'
+        ADMIN_MONEY_CHECK : 'ADMIN_MONEY_CHECK',
+        USER_MONEY_SENT : 'USER_MONEY_SENT',
+        USER_MONEY_RECEIVED : 'USER_MONEY_RECEIVED',
+        USER_MONEY_CHECK : 'USER_MONEY_CHECK',
+        NO_TYPE : 'NO_TYPE'
 
     };
 
-    parseSMS(sms){
+    getSMSType(sms){
+
+        
+        
+        const isAdminMoneySent = (JSON.stringify(this.parseSMSAdminMoneySent(sms)) === 'null') === false;
+
+
+        
+
+       if(isAdminMoneySent === true){
+           return SMSParser.SMS_TYPE.ADMIN_MONEY_SENT;
+       }
+
+       return SMSParser.SMS_TYPE.NO_TYPE;
+    }
+
+    parseSMSAdminMoneySent(sms){
         
         
 
@@ -79,7 +99,7 @@ class SMSParser {
     }
 
     getParsedDataHTML(sms){
-        const data = this.parseSMS(sms);
+        const data = this.parseSMSAdminMoneySent(sms);
 
         if(data === null){
             return 'sms cant be parsed';
