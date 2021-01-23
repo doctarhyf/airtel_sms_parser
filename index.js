@@ -3,6 +3,27 @@ var btnParse = document.getElementById('btn-parse');
 var smsCont = document.getElementById('sms-details-cont');
 var smsParsedDataCont = document.getElementById('sms-parsed-data');
 var sms = document.getElementById('sms');
+var smsSamplesList = document.getElementById('smsSamplesList');
+
+smsSamplesList.addEventListener('change', function () {
+
+    const msgType = SMS_MODELS[this.value];
+
+    sms.value = msgType;
+    console.log(msgType);
+
+})
+
+const SMS_MODELS = {
+    ADMIN_MONEY_SENT : 'ADMIN_MONEY_SENT',
+    ADMIN_MONEY_RECEIVED : 'ADMIN_MONEY_RECEIVED',
+    ADMIN_MONEY_CHECK : 'ADMIN_MONEY_CHECK',
+    USER_MONEY_SENT : 'USER_MONEY_SENT',
+    USER_MONEY_RECEIVED : 'USER_MONEY_RECEIVED',
+    USER_MONEY_CHECK : 'USER_MONEY_CHECK',
+    NO_TYPE : 'NO_TYPE'
+
+}
 
 btnParse.addEventListener("click", function () {
 
@@ -45,6 +66,8 @@ class SMSParser {
         
         
         const isAdminMoneySent = (JSON.stringify(this.parseSMSAdminMoneySent(sms)) === 'null') === false;
+        const isAdminMoneyReceived = (JSON.stringify(this.parseSMSAdminMoneyReceived(sms)) === 'null') === false;
+        const isAdminMoneyCheck = (JSON.stringify(this.parseSMSAdminMoneyCheck(sms)) === 'null') === false;
 
 
         
@@ -53,8 +76,19 @@ class SMSParser {
            return SMSParser.SMS_TYPE.ADMIN_MONEY_SENT;
        }
 
+       if(isAdminMoneyReceived === true){
+           return SMSParser.SMS_TYPE.ADMIN_MONEY_RECEIVED;
+       }
+
+       if(isAdminMoneyCheck === true){
+        return SMSParser.SMS_TYPE.ADMIN_MONEY_CHECK;
+        }
+
        return SMSParser.SMS_TYPE.NO_TYPE;
     }
+
+    
+    
 
     parseSMSAdminMoneySent(sms){
         
@@ -96,6 +130,14 @@ class SMSParser {
         console.log(JSON.stringify(data));
         
         return(data);
+    }
+
+    parseSMSAdminMoneyReceived(sms){
+        return 'null'
+    }
+
+    parseSMSAdminMoneyCheck(sms){
+        return 'null';
     }
 
     getParsedDataHTML(sms){
