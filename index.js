@@ -15,7 +15,7 @@ smsSamplesList.addEventListener('change', function () {
 })
 
 const SMS_MODELS = {
-    ADMIN_MONEY_SENT : 'ADMIN_MONEY_SENT',
+    ADMIN_MONEY_SENT : "Trans. ID: CI200530.1831.D47100 vous avez envoye de 1.0000 USD a  995282840.Votre solde disponible est de 9.0000USD.Cout:0.0000USD",
     ADMIN_MONEY_RECEIVED : 'ADMIN_MONEY_RECEIVED',
     ADMIN_MONEY_CHECK : 'ADMIN_MONEY_CHECK',
     USER_MONEY_SENT : 'USER_MONEY_SENT',
