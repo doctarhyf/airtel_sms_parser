@@ -175,7 +175,54 @@ class SMSParser {
     }
 
     parseSMSAdminMoneyReceived(sms){
-        return null;
+
+
+        const test =  RX_ADMIN_MONEY_RECEIVED.test(sms);
+
+        if(test === false) {
+            console.error('This sms is not of type of RX_ADMIN_MONEY_RECEIVED ' );
+            return null;
+        }
+
+        //parsing
+        //Transaction ID
+        var regEx = /ID: \w*\d*\.\d{4}\.\w*\d*/i;
+        var found = sms.match(regEx);
+        const transID = found[0].replace('ID: ', '');
+
+        //Amount and currency
+        regEx = /Vous avez recu \d*.\d{4} \w{3}/i;
+        found = sms.match(regEx);
+        const amountAndCurrencyData = found[0].replace('Vous avez recu ', '').split(' ');
+        const amount = amountAndCurrencyData[0];
+        const currency = amountAndCurrencyData[1];
+
+        //sender name and number
+        regEx = /Venant de \d{9} BOB DITEND./i;
+        found = sms.match(regEx);
+        const senderNum = found[0].replace('Venant de ','').split(' ')[0];
+        const senderName = found[0].replace('Venant de ' + senderNum, '').replace('.','');
+
+        //solde disponible
+        regEx = /Votre solde disponible est de:  \d*.\d{4} CDF/i;
+        found = sms.match(regEx);
+        const solde = found[0].replace('Votre solde disponible est de:  ', '').split(' ')[0];
+        
+        
+
+
+        console.log('sender name num match -> ' + found);
+
+        const data = {
+            transID:transID,
+            amount:amount,
+            currency:currency,
+            senderName:senderName,
+            senderNum:senderNum,
+            solde:solde
+        };
+
+        return (data);
     }
 
     parseSMSAdminMoneyCheck(sms){
