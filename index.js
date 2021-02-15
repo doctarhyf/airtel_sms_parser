@@ -262,7 +262,7 @@ class SMSParser {
 
     parseSMSUserMoneySent(sms){
 
-        
+
         const test =  RX_USER_MONEY_SENT.test(sms);
 
         if(test === false) {
@@ -347,11 +347,11 @@ class SMSParser {
         }
 
         if(smsType === SMSParser.SMS_TYPE.USER_MONEY_SENT){
-            data = this.parseSMSAdminMoneySent(sms);
+            data = this.parseSMSUserMoneySent(sms);
         }
 
         if(smsType === SMSParser.SMS_TYPE.USER_MONEY_CHECK){
-            data = this.parseSMSAdminMoneyCheck(sms);
+            data = this.parseSMSUserMoneyCheck(sms);
         }
 
         if(data === null){
