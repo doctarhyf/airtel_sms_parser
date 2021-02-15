@@ -27,7 +27,7 @@ const SMS_MODELS = {
 
 const RX_ADMIN_MONEY_SENT = /Trans. ID: (\w|\d){8}.\d{4}.(\w|\d){6} vous avez envoye de \d*.\d{4} USD a  \d{9}./;
 const RX_ADMIN_MONEY_RECEIVED = /Trans. ID: CO200606.2320.C79855. Vous avez recu 1000.0000 CDF. Venant de 995282840 BOB DITEND. Votre solde disponible est de:  5500.0000 CDF./;
-const RX_ADMIN_MONEY_CHECK = /test/;
+const RX_ADMIN_MONEY_CHECK = /Txn. ID : ES200602.1645.C30377. Vous avez actuellement  10.0000  USD disponible sur votre compte courant. Et 0.0170 USD sur votre compte commissions ./;
 
 const RX_USER_MONEY_SENT = /test/;
 const RX_USER_MONEY_RECEIVED = /test/;
@@ -226,7 +226,26 @@ class SMSParser {
     }
 
     parseSMSAdminMoneyCheck(sms){
-        return null;
+
+        const test =  RX_ADMIN_MONEY_CHECK.test(sms);
+
+        if(test === false) {
+            console.error('This sms is not of type of RX_ADMIN_MONEY_CHECK ' );
+            return null;
+        }
+
+        //parsing
+        //Transaction ID
+        var regEx = /\w*\d*\.\d{4}\.\w*\d*/i;
+        var found = sms.match(regEx);
+        const transID = found[0];
+
+
+        const data = {
+            transID:transID
+        }
+
+        return (data);
     }
 
     parseSMSUserMoneySent(sms){
