@@ -204,7 +204,7 @@ class SMSParser {
         const senderName = found[0].replace('Venant de ' + senderNum, '').replace('.','');
 
         //solde disponible
-        regEx = /Votre solde disponible est de:  \d*.\d{4} CDF/i;
+        regEx = /Votre solde disponible est de:  \d*.\d{4} \w{3}/i;
         found = sms.match(regEx);
         const solde = found[0].replace('Votre solde disponible est de:  ', '').split(' ')[0];
         
@@ -240,9 +240,21 @@ class SMSParser {
         var found = sms.match(regEx);
         const transID = found[0];
 
+        //amount and currency
+        regEx = /Vous avez actuellement  \d*.\d{4}  \w{3}/i;
+        found = sms.match(regEx);
+
+        
+
+        const amount = found[0].replace('Vous avez actuellement  ', '').split('  ')[0];
+        const currency = found[0].replace('Vous avez actuellement  ', '').split('  ')[1];
+
+        
 
         const data = {
-            transID:transID
+            transID:transID,
+            amount:amount,
+            currency:currency
         }
 
         return (data);
