@@ -29,9 +29,9 @@ const RX_ADMIN_MONEY_SENT = /Trans. ID: (\w|\d){8}.\d{4}.(\w|\d){6} vous avez en
 const RX_ADMIN_MONEY_RECEIVED = /Trans. ID: (\w|\d){8}.\d{4}.(\w|\d){6}. Vous avez recu \d*.\d{4} \w{3}. Venant de \d{9} (\w|\s)*. Votre solde disponible est de:  \d*.\d{4} \w{3}./;
 const RX_ADMIN_MONEY_CHECK = /Txn. ID : (\w|\d){8}.\d{4}.(\w|\d){6}. Vous avez actuellement  \d*.\d{4}  \w{3} disponible sur votre compte courant. Et \d*.\d{4} \w{3} sur votre compte commissions ./;
 
-const RX_USER_MONEY_SENT = /9012|Trans ID: CO200530.1836.A40286. Dear Customer. You have sent USD 1.0000 to 975886099 ALBERT OMBA SHENYEMA. Your available balance is USD 5.2960./;
-const RX_USER_MONEY_RECEIVED = /Transaction ID: CI200530.1831.D47100:Vous avez recu 1.0000 USD a partir de ALBER908LK, ALBERT OMBA SHENYEMA. votre nouveau solde est 6.4960 USD.Cout:0.0000USD/;
-const RX_USER_MONEY_CHECK = /Votre solde disponible est de 541.3000 CDF./;
+const RX_USER_MONEY_SENT = /\d*\|Trans ID: (\w|\d){8}.\d{4}.(\w|\d){6}. Dear Customer. You have sent \w{3} \d*.\d{4} to \d{9} (\w|\s)*. Your available balance is \w{3} \d*.\d{4}./;
+const RX_USER_MONEY_RECEIVED = /Transaction ID: (\w|\d){8}.\d{4}.(\w|\d){6}:Vous avez recu \d*.\d{4} \w{3} a partir de (\w|\d){10}, (\w|\s)*. votre nouveau solde est \d*.\d{4} \w{3}.Cout:\d*.\d{4}\w{3}/;
+const RX_USER_MONEY_CHECK = /Votre solde disponible est de \d*.\d{4} \w{3}./;
 
 btnParse.addEventListener("click", function () {
 
