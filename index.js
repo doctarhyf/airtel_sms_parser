@@ -16,7 +16,7 @@ smsSamplesList.addEventListener('change', function () {
 
 const SMS_MODELS = {
     ADMIN_MONEY_SENT : "Trans. ID: CI200530.1831.D47100 vous avez envoye de 1.0000 USD a  995282840.Votre solde disponible est de 9.0000USD.Cout:0.0000USD",
-    ADMIN_MONEY_RECEIVED : 'Trans. ID: CI200530.1831.D47100 vous avez envoye de 1.0000 USD a  995282840.Votre solde disponible est de 9.0000USD.Cout:0.0000USD',
+    ADMIN_MONEY_RECEIVED : 'Trans. ID: CO200606.2320.C79855. Vous avez recu 1000.0000 CDF. Venant de 995282840 BOB DITEND. Votre solde disponible est de:  5500.0000 CDF.',
     ADMIN_MONEY_CHECK : 'Txn. ID : ES200602.1645.C30377. Vous avez actuellement  10.0000  USD disponible sur votre compte courant. Et 0.0170 USD sur votre compte commissions .',
     USER_MONEY_SENT : '9012|Trans ID: CO200530.1836.A40286. Dear Customer. You have sent USD 1.0000 to 975886099 ALBERT OMBA SHENYEMA. Your available balance is USD 5.2960.',
     USER_MONEY_RECEIVED : 'Transaction ID: CI200530.1831.D47100:Vous avez recu 1.0000 USD a partir de ALBER908LK, ALBERT OMBA SHENYEMA. votre nouveau solde est 6.4960 USD.Cout:0.0000USD',
@@ -25,17 +25,25 @@ const SMS_MODELS = {
 
 }
 
-const RX_ADMIN_MONEY_SENT = /Trans\. \w{2}: \w{2}\d{6}.\d{4}.\w{1}\d{5} vous avez envoye de \d*.\d* \w{3} a  \d{9}.Votre solde disponible est de \d*.\d*\w{3}.Cout:\d*.\d*\w{3}/;
+const RX_ADMIN_MONEY_SENT = /Trans. ID: (\w|\d){8}.\d{4}.(\w|\d){6} vous avez envoye de \d*.\d{4} USD a  \d{9}./;
+const RX_ADMIN_MONEY_RECEIVED = /Trans. ID: CO200606.2320.C79855. Vous avez recu 1000.0000 CDF. Venant de 995282840 BOB DITEND. Votre solde disponible est de:  5500.0000 CDF./;
+const RX_ADMIN_MONEY_CHECK = /test/;
 
+const RX_USER_MONEY_SENT = /test/;
+const RX_USER_MONEY_RECEIVED = /test/;
+const RX_USER_MONEY_CHECK = /test/;
 
 btnParse.addEventListener("click", function () {
 
     var parser = new SMSParser('voda', 'fr');
     var smsVal = sms.value;
     var smsParsed = parser.getSMSType(smsVal);
+    var parsedData = parser.getParsedDataHTML(smsVal);
 
     smsCont.innerHTML = "sms : <br/><br/><b>" + smsVal + '</b>';
-    smsParsedDataCont.innerHTML = "Parsed Data : <br/><br/><b>" + smsParsed + '</b>'
+    smsParsedDataCont.innerHTML = "Parsed Data : <br/><br/><b>SMS TYPE : " + smsParsed + '</b></br>' +
+    parsedData;
+
 })
 
 
@@ -107,30 +115,65 @@ class SMSParser {
     }
 
     
+    chechCurrentMatch(found){
+        //check current regex macth -------------
+        console.log("current regex match -> " + found);
+
+        if(found ===  null){
+            console.error('Cant parse sms, check sms format');
+            return null;
+        }
+        // --------------------
+    }
     
 
     parseSMSAdminMoneySent(sms){
         
         
-        return null;
+        const test =  RX_ADMIN_MONEY_SENT.test(sms);
+
+        if(test === false) {
+            console.error('This sms is not of type of RX_ADMIN_MONEY_SENT ' );
+            return null;
+        }
+
+        console.log('RX_ADMIN_MONEY_SENT  -> ' + test);
 
         //Transaction ID
         var regEx = /ID: \w*\d*\.\d{4}\.\w*\d*/i;
         var found = sms.match(regEx);
 
+        /*
+        //check current regex macth -------------
+        console.log("current regex match -> " + found);
+
         if(found ===  null){
-            console.log('Cant parse sms, check sms format');
+            console.error('Cant parse sms, check sms format');
             return null;
         }
+        // --------------------*/
 
         const transID = found[0].replace('ID: ', '');
 
         //Amount and currency
         regEx = /vous avez envoye de \d*\.\d* \w{3}/i;
         found = sms.match(regEx);
-        const amountAndCurrencyData = found[0].replace('de ', '').split(' ');
+
+        /*
+        //check current regex macth -------------
+        console.log("current regex match -> " + found);
+
+        if(found ===  null){
+            console.error('Cant parse sms, check sms format');
+            return null;
+        }
+        // --------------------*/
+
+        const amountAndCurrencyData = found[0].replace('vous avez envoye de ', '').split(' ');
         const amount = amountAndCurrencyData[0];
         const currency = amountAndCurrencyData[1];
+
+        console.log('fucking found -> \'' + found + '\'');
 
         //Disponible
         regEx = /disponible est de \d*\.\d*/i;
@@ -145,7 +188,6 @@ class SMSParser {
             disponible: disponible,
             type: SMSParser.SMS_TYPE.ADMIN_MONEY_SENT
         };
-
 
         console.log(JSON.stringify(data));
         
