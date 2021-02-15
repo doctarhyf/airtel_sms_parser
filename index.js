@@ -30,8 +30,8 @@ const RX_ADMIN_MONEY_RECEIVED = /Trans. ID: CO200606.2320.C79855. Vous avez recu
 const RX_ADMIN_MONEY_CHECK = /Txn. ID : ES200602.1645.C30377. Vous avez actuellement  10.0000  USD disponible sur votre compte courant. Et 0.0170 USD sur votre compte commissions ./;
 
 const RX_USER_MONEY_SENT = /9012|Trans ID: CO200530.1836.A40286. Dear Customer. You have sent USD 1.0000 to 975886099 ALBERT OMBA SHENYEMA. Your available balance is USD 5.2960./;
-const RX_USER_MONEY_RECEIVED = /test/;
-const RX_USER_MONEY_CHECK = /test/;
+const RX_USER_MONEY_RECEIVED = /Transaction ID: CI200530.1831.D47100:Vous avez recu 1.0000 USD a partir de ALBER908LK, ALBERT OMBA SHENYEMA. votre nouveau solde est 6.4960 USD.Cout:0.0000USD/;
+const RX_USER_MONEY_CHECK = /Votre solde disponible est de 541.3000 CDF./;
 
 btnParse.addEventListener("click", function () {
 
@@ -82,7 +82,7 @@ class SMSParser {
 
         const isUserMoneySent = (JSON.stringify(this.parseSMSUserMoneySent(sms)) === 'null') === false;
         const isUserMoneyReceived = (JSON.stringify(this.parseSMSUserMoneyReceived(sms)) === 'null') === false;
-        const isUserMoneyCheck = (JSON.stringify(this.parseSMSAdminMoneyCheck(sms)) === 'null') === false;
+        const isUserMoneyCheck = (JSON.stringify(this.parseSMSUserMoneyCheck(sms)) === 'null') === false;
 
 
         
@@ -325,11 +325,34 @@ class SMSParser {
     }
 
     parseSMSUserMoneyReceived(sms){
-        return null;
+
+        return (null);
     }
 
     parseSMSUserMoneyCheck(sms){
-        return null;
+
+        const test =  RX_USER_MONEY_CHECK.test(sms);
+
+        if(test === false) {
+            console.error('This sms is not of type of RX_USER_MONEY_CHECK ' );
+            return null;
+        }
+
+        //console.log('RX_ADMIN_MONEY_SENT  -> ' + test);
+
+        //Transaction ID
+        var regEx = /Votre solde disponible est de \d*.\d{4} \w{3}./i;
+        var found = sms.match(regEx);
+
+        const solde = found[0].replace('Votre solde disponible est de ','').split(' ')[0];
+        const currency = found[0].replace('Votre solde disponible est de ','').split(' ')[1];
+
+        const data = {
+            solde:solde,
+            currency:currency
+        }
+
+        return data;
     }
 
     getParsedDataHTML(sms){
