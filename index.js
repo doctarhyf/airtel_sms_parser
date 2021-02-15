@@ -326,7 +326,52 @@ class SMSParser {
 
     parseSMSUserMoneyReceived(sms){
 
-        return (null);
+        const test =  RX_USER_MONEY_RECEIVED.test(sms);
+
+        if(test === false) {
+            console.error('This sms is not of type of RX_USER_MONEY_RECEIVED ' );
+            return null;
+        }
+
+        //parsing
+        //Transaction ID
+        var regEx = /\w*\d*\.\d{4}\.\w*\d*/i;
+        var found = sms.match(regEx);
+        const transID = found[0];
+
+        //Amount and currency
+        regEx = /Vous avez recu \d*.\d{4} \w{3}/i;
+        found = sms.match(regEx);
+        const amountAndCurrencyData = found[0].replace('Vous avez recu ', '').split(' ');
+        const amount = amountAndCurrencyData[0];
+        const currency = amountAndCurrencyData[1];
+
+        //sender name and number
+        regEx = /a partir de (\w|\d){10}, (\w|\s)*./i;
+        found = sms.match(regEx);
+        const senderNum = found[0].replace('a partir de ','').split(',')[0];
+        const senderName = found[0].replace('a partir de ','').split(',')[1];
+
+        //solde disponible
+        regEx = /votre nouveau solde est \d*.\d{4} \w{3}./i;
+        found = sms.match(regEx);
+        const solde = found[0].replace('votre nouveau solde est ', '').split(' ')[0];
+        
+        
+
+
+        console.log('sender name num match -> ' + found);
+
+        const data = {
+            transID:transID,
+            amount:amount,
+            currency:currency,
+            senderName:senderName,
+            senderNum:senderNum,
+            solde:solde
+        };
+
+        return (data);
     }
 
     parseSMSUserMoneyCheck(sms){
