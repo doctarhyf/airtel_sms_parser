@@ -29,7 +29,7 @@ const RX_ADMIN_MONEY_SENT = /Trans. ID: (\w|\d){8}.\d{4}.(\w|\d){6} vous avez en
 const RX_ADMIN_MONEY_RECEIVED = /Trans. ID: CO200606.2320.C79855. Vous avez recu 1000.0000 CDF. Venant de 995282840 BOB DITEND. Votre solde disponible est de:  5500.0000 CDF./;
 const RX_ADMIN_MONEY_CHECK = /Txn. ID : ES200602.1645.C30377. Vous avez actuellement  10.0000  USD disponible sur votre compte courant. Et 0.0170 USD sur votre compte commissions ./;
 
-const RX_USER_MONEY_SENT = /test/;
+const RX_USER_MONEY_SENT = /9012|Trans ID: CO200530.1836.A40286. Dear Customer. You have sent USD 1.0000 to 975886099 ALBERT OMBA SHENYEMA. Your available balance is USD 5.2960./;
 const RX_USER_MONEY_RECEIVED = /test/;
 const RX_USER_MONEY_CHECK = /test/;
 
@@ -261,7 +261,56 @@ class SMSParser {
     }
 
     parseSMSUserMoneySent(sms){
-        return null;
+
+        
+        const test =  RX_USER_MONEY_SENT.test(sms);
+
+        if(test === false) {
+            console.error('This sms is not of type of RX_USER_MONEY_SENT ' );
+            return null;
+        }
+
+        //console.log('RX_ADMIN_MONEY_SENT  -> ' + test);
+
+        //Transaction ID
+        var regEx = /\w*\d*\.\d{4}\.\w*\d*/i;
+        var found = sms.match(regEx);
+
+        const transID = 'cool'; //found[0];
+
+
+        /*
+        //Amount and currency
+        regEx = /vous avez envoye de \d*\.\d* \w{3}/i;
+        found = sms.match(regEx);
+
+        const amountAndCurrencyData = found[0].replace('vous avez envoye de ', '').split(' ');
+        const amount = amountAndCurrencyData[0];
+        const currency = amountAndCurrencyData[1];
+
+        
+
+        //Disponible
+        regEx = /disponible est de \d*\.\d/i;
+        found = sms.match(regEx);
+        const disponible = found[0].replace('disponible est de ','');
+        
+        //parsed data object
+
+        */
+
+
+        const data = {
+            transID: transID }/*
+            amount: amount, 
+            currency: currency,
+            disponible: disponible,
+            type: SMSParser.SMS_TYPE.ADMIN_MONEY_SENT
+        };*/
+
+        //console.log(JSON.stringify(data));
+        
+        return(data);
     }
 
     parseSMSUserMoneyReceived(sms){
