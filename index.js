@@ -37,11 +37,11 @@ btnParse.addEventListener("click", function () {
 
     var parser = new SMSParser('voda', 'fr');
     var smsVal = sms.value;
-    var smsParsed = parser.getSMSType(smsVal);
+    var smsType = parser.getSMSType(smsVal);
     var parsedData = parser.getParsedDataHTML(smsVal);
 
     smsCont.innerHTML = "sms : <br/><br/><b>" + smsVal + '</b>';
-    smsParsedDataCont.innerHTML = "Parsed Data : <br/><br/><b>SMS TYPE : " + smsParsed + '</b></br>' +
+    smsParsedDataCont.innerHTML = "Parsed Data : <br/><br/><b>SMS TYPE : " + smsType + '</b></br>' +
     parsedData;
 
 })
@@ -137,21 +137,11 @@ class SMSParser {
             return null;
         }
 
-        console.log('RX_ADMIN_MONEY_SENT  -> ' + test);
+        //console.log('RX_ADMIN_MONEY_SENT  -> ' + test);
 
         //Transaction ID
         var regEx = /ID: \w*\d*\.\d{4}\.\w*\d*/i;
         var found = sms.match(regEx);
-
-        /*
-        //check current regex macth -------------
-        console.log("current regex match -> " + found);
-
-        if(found ===  null){
-            console.error('Cant parse sms, check sms format');
-            return null;
-        }
-        // --------------------*/
 
         const transID = found[0].replace('ID: ', '');
 
@@ -159,21 +149,11 @@ class SMSParser {
         regEx = /vous avez envoye de \d*\.\d* \w{3}/i;
         found = sms.match(regEx);
 
-        /*
-        //check current regex macth -------------
-        console.log("current regex match -> " + found);
-
-        if(found ===  null){
-            console.error('Cant parse sms, check sms format');
-            return null;
-        }
-        // --------------------*/
-
         const amountAndCurrencyData = found[0].replace('vous avez envoye de ', '').split(' ');
         const amount = amountAndCurrencyData[0];
         const currency = amountAndCurrencyData[1];
 
-        console.log('fucking found -> \'' + found + '\'');
+        
 
         //Disponible
         regEx = /disponible est de \d*\.\d*/i;
@@ -189,7 +169,7 @@ class SMSParser {
             type: SMSParser.SMS_TYPE.ADMIN_MONEY_SENT
         };
 
-        console.log(JSON.stringify(data));
+        //console.log(JSON.stringify(data));
         
         return(data);
     }
@@ -215,11 +195,26 @@ class SMSParser {
     }
 
     getParsedDataHTML(sms){
-        const data = this.parseSMSAdminMoneySent(sms);
+
+
+        var data = null;
+
+        const smsType = this.getSMSType(sms);
+        console.log('current sms type found -> ' + smsType);
+
+    
+        if(smsType === SMSParser.SMS_TYPE.ADMIN_MONEY_SENT){
+            data = this.parseSMSAdminMoneySent(sms);
+        }
+
+        if(smsType === SMSParser.SMS_TYPE.ADMIN_MONEY_RECEIVED){
+            data = this.parseSMSAdminMoneyReceived(sms);
+        }
 
         if(data === null){
             return 'sms cant be parsed';
         }
+        
 
         let html = '';
 
