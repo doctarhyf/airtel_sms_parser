@@ -211,6 +211,22 @@ class SMSParser {
             data = this.parseSMSAdminMoneyReceived(sms);
         }
 
+        if(smsType === SMSParser.SMS_TYPE.ADMIN_MONEY_CHECK){
+            data = this.parseSMSAdminMoneyCheck(sms);
+        }
+
+        if(smsType === SMSParser.SMS_TYPE.USER_MONEY_RECEIVED){
+            data = this.parseSMSUserMoneyReceived(sms);
+        }
+
+        if(smsType === SMSParser.SMS_TYPE.USER_MONEY_SENT){
+            data = this.parseSMSAdminMoneySent(sms);
+        }
+
+        if(smsType === SMSParser.SMS_TYPE.USER_MONEY_CHECK){
+            data = this.parseSMSAdminMoneyCheck(sms);
+        }
+
         if(data === null){
             return 'sms cant be parsed';
         }
