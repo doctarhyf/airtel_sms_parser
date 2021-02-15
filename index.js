@@ -276,39 +276,50 @@ class SMSParser {
         var regEx = /\w*\d*\.\d{4}\.\w*\d*/i;
         var found = sms.match(regEx);
 
-        const transID = 'cool'; //found[0];
+        const transID = found[0];
 
-
-        /*
-        //Amount and currency
-        regEx = /vous avez envoye de \d*\.\d* \w{3}/i;
-        found = sms.match(regEx);
-
-        const amountAndCurrencyData = found[0].replace('vous avez envoye de ', '').split(' ');
-        const amount = amountAndCurrencyData[0];
-        const currency = amountAndCurrencyData[1];
 
         
-
-        //Disponible
-        regEx = /disponible est de \d*\.\d/i;
+        
+        //Amount and currency
+        regEx = /You have sent \w{3} \d*.\d{4}/i;
         found = sms.match(regEx);
-        const disponible = found[0].replace('disponible est de ','');
+
+        const amountAndCurrencyData = found[0].replace('You have sent ', '').split(' ');
+        const amount = amountAndCurrencyData[1];
+        const currency = amountAndCurrencyData[0];
+
+        
+        
+        //receiver name and phone
+        regEx = /to 975886099 ALBERT OMBA SHENYEMA./i;
+        found = sms.match(regEx);
+
+        console.log('cur found ' + found[0]);
+
+        const receiverPhone = found[0].replace('to ','').split(' ')[0];
+        const receiverName = found[0].replace(receiverPhone, '').replace('to ','').replace('.','').trim();
+
+        
+        
+
+        //balance
+        regEx = /Your available balance is \w{3} \d*.\d{4}./i;
+        found = sms.match(regEx);
+        const balance = found[0].replace('Your available balance is ', '').replace(currency, '');
         
         //parsed data object
 
-        */
-
-
         const data = {
-            transID: transID }/*
+            transID: transID   ,
             amount: amount, 
             currency: currency,
-            disponible: disponible,
-            type: SMSParser.SMS_TYPE.ADMIN_MONEY_SENT
-        };*/
+            receiverPhone: receiverPhone,
+            receiverName: receiverName,
+            balance: balance
+        };
 
-        //console.log(JSON.stringify(data));
+        //console.log(JSON.stringify(data));*/
         
         return(data);
     }
